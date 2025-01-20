@@ -13,10 +13,12 @@ class _TambahbukuState extends State<Tambahbuku> {
 
   void _addBook() {
     if (_formKey.currentState!.validate()) {
-      // Simpan buku (di sini kita hanya mencetak ke konsol)
-      print('Buku ditambahkan: $judul, $jumlah_buku, $tahun_terbit');
-      // Kembali ke halaman sebelumnya
-      Navigator.pop(context);
+      // Kirim data buku yang baru ke halaman sebelumnya
+      Navigator.pop(context, {
+        "judul": judul,
+        "jumlah": jumlah_buku,
+        "tahun": tahun_terbit,
+      });
     }
   }
 
@@ -24,7 +26,7 @@ class _TambahbukuState extends State<Tambahbuku> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tambah Buku'),
+        title: const Text('Tambah Buku'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -33,7 +35,7 @@ class _TambahbukuState extends State<Tambahbuku> {
           child: Column(
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(labelText: 'Judul Buku'),
+                decoration: const InputDecoration(labelText: 'Judul Buku'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Silakan masukkan judul buku';
@@ -45,7 +47,7 @@ class _TambahbukuState extends State<Tambahbuku> {
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'jumlah buku'),
+                decoration: const InputDecoration(labelText: 'Jumlah Buku'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Silakan masukkan jumlah buku';
@@ -57,8 +59,8 @@ class _TambahbukuState extends State<Tambahbuku> {
                 },
               ),
               TextFormField(
-                decoration: InputDecoration(labelText: 'tahun terbit'),
-                validator: ( value) {
+                decoration: const InputDecoration(labelText: 'Tahun Terbit'),
+                validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Silakan masukkan tahun terbit buku';
                   }
@@ -68,10 +70,10 @@ class _TambahbukuState extends State<Tambahbuku> {
                   tahun_terbit = value;
                 },
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _addBook,
-                child: Text('Tambah Buku'),
+                child: const Text('Tambah Buku'),
               ),
             ],
           ),

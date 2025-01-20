@@ -21,7 +21,12 @@ class LibraryApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final List<Map<String, String>> bukuList = [
     {"judul": "Buku Fiksi", "jumlah": "10", "tahun": "2020"},
     {"judul": "Buku Non-Fiksi", "jumlah": "5", "tahun": "2019"},
@@ -30,6 +35,25 @@ class HomePage extends StatelessWidget {
     {"judul": "Novel Fantasi", "jumlah": "6", "tahun": "2022"},
     {"judul": "Ensiklopedia", "jumlah": "15", "tahun": "2017"},
   ];
+
+  void _navigateToTambahBuku() async {
+    final newBook = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Tambahbuku()),
+    );
+
+    if (newBook != null) {
+      setState(() {
+        bukuList.add(newBook);
+      });
+    }
+  }
+
+  void _hapusBuku(int index) {
+    setState(() {
+      bukuList.removeAt(index);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,14 +79,7 @@ class HomePage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.bookmark_add),
               title: const Text('Tambah Buku'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Tambahbuku(),
-                  ),
-                );
-              },
+              onTap: _navigateToTambahBuku,
             ),
           ],
         ),
@@ -92,7 +109,6 @@ class HomePage extends StatelessWidget {
               },
               child: const Text('Jelajahi Koleksi'),
             ),
-            const SizedBox(height: 24),
             Expanded(
               child: GridView.builder(
                 itemCount: bukuList.length,
@@ -103,37 +119,52 @@ class HomePage extends StatelessWidget {
                 ),
                 itemBuilder: (context, index) {
                   final buku = bukuList[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HalamanBuku(
-                            judul: buku["judul"]!,
-                            jumlahBuku: buku["jumlah"]!,
-                            tahunTerbit: buku["tahun"]!,
-                          ),
+                  return Card(
+                    elevation: 4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.book,
+                          size: 50,
+                          color: Colors.blue,
                         ),
-                      );
-                    },
-                    child: Card(
-                      elevation: 4,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.book,
-                            size: 50,
-                            color: Colors.blue,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            buku["judul"]!,
-                            style: const TextStyle(fontSize: 16),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
+                        const SizedBox(height: 8),
+                        Text(
+                          buku["judul"]!,
+                          style: const TextStyle(fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HalamanBuku(
+                                      judul: buku["judul"]!,
+                                      jumlahBuku: buku["jumlah"]!,
+                                      tahunTerbit: buku["tahun"]!,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: const Text('Detail'),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              onPressed: () => _hapusBuku(index),
+                              child: const Text('Hapus'),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   );
                 },
